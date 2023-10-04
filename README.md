@@ -7,7 +7,7 @@
 [link-tests]: https://github.com/eroell/scimb/actions/workflows/test.yml
 [badge-docs]: https://img.shields.io/readthedocs/scimb
 
-e) A small piece of code maybe helping to balance single cell datasets
+Trial of template maybe extended to balance datasets.
 
 ## Getting started
 
