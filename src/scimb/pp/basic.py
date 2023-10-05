@@ -38,13 +38,16 @@ def basic_preproc(adata: AnnData) -> int:
 # It should return a new AnnData object.
 
 
-def oversample(adata: AnnData, key: str, method: str, **kwargs) -> Union[AnnData, None]:
+def oversampling(
+    adata: AnnData, key: str, method: str = "RandomOverSampler", use_rep: str = None, **kwargs
+) -> Union[AnnData, None]:
     """_summary_
 
     Args:
         adata (AnnData): _description_
         key (str): _description_
         method (str): _description_
+        use_rep (str, optional): _description_. Defaults to None.
 
     Raises
     ------
@@ -55,28 +58,62 @@ def oversample(adata: AnnData, key: str, method: str, **kwargs) -> Union[AnnData
     -------
         Union[AnnData, None]: _description_
     """
+    # TODO: most modern random state fix
     if method == "RandomOverSampler":
-        RandomOverSampler(**kwargs)
-    if method == "SMOTE":
-        SMOTE(**kwargs)
+        sampler = RandomOverSampler(**kwargs)
+    elif method == "SMOTE":
+        sampler = SMOTE(**kwargs)
     elif method == "SMOTENC":
-        SMOTENC(**kwargs)
+        sampler = SMOTENC(**kwargs)
     elif method == "SMOTEN":
-        SMOTEN(**kwargs)
+        sampler = SMOTEN(**kwargs)
     elif method == "ADASYN":
-        ADASYN(**kwargs)
+        sampler = ADASYN(**kwargs)
     elif method == "BorderlineSMOTE":
-        BorderlineSMOTE(**kwargs)
+        sampler = BorderlineSMOTE(**kwargs)
     elif method == "KMeansSMOTE":
-        KMeansSMOTE(**kwargs)
+        sampler = KMeansSMOTE(**kwargs)
     elif method == "SVMSMOTE":
-        SVMSMOTE(**kwargs)
+        sampler = SVMSMOTE(**kwargs)
     else:
         raise ValueError(f"Unknown oversampling method: {method}")
 
-    raise NotImplementedError("Implement oversampling here.")
+    if use_rep is None:
+        use_data = adata.X
+    elif use_rep in adata.obsm.keys():
+        use_data = adata.obsm[use_rep]
+    else:
+        raise ValueError(f"Error with use_rep: is not None and is not in adata.obsm: {use_rep}.")
 
-    return
+    if key in adata.obs.keys():
+        use_label = adata.obs[key]
+    else:
+        raise ValueError(f"Error with key: is not in adata.obs: {key}.")
+
+    # TODO: only interested in index, that is sampler.sample_indices_
+    # is then fit_resample really the way to go?
+    # _, y = sampler.fit_resample(use_data, use_label)
+    sampler.fit_resample(use_data, use_label)
+
+    # get the index of the new data
+    # idx = y.index # not useful it just gets a range index
+
+    # sample the adata
+    # adata_sub = adata[idx, :].copy()
+    adata_sub = adata[sampler.sample_indices_, :].copy()
+
+    # store sampling information in adata.obs
+    adata_sub.obs["orig_pos"] = sampler.sample_indices_
+    adata_sub.obs["orig_index"] = adata.obs.index[sampler.sample_indices_]
+
+    # TODO: think if we want to keep the original data. Representations might become misleading
+    # First thought: keep .obs, .var, .uns (e.g. to keep the log1p base info) (but not rank genes etc?)
+    # drop .obsm, .varm, .obsp, any tracks of pca and neighbors and umaps
+    # TODO: might keep some things - user responsibility & decision how to proceed?
+    # I personally would probably only keep the count data and the .obs and .var but depends on the use case?
+    # TODO: think whether to rename duplicated indices (only an upsampling thing)
+
+    return adata_sub
 
 
 # TODO: Add an undersampling function which calls the imblearn undersampling library

@@ -21,6 +21,7 @@ urls.Home-page = "https://github.com/eroell/scimb"
 dependencies = [
     "anndata",
     "scanpy",
+    "imbalanced-learn",
     # for debug logging (referenced from the issue template)
     "session-info"
 ]
