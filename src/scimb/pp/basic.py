@@ -78,8 +78,6 @@ def oversampling(
     else:
         raise ValueError(f"Unknown oversampling method: {method}")
 
-
-
     if use_rep is None:
         use_data = adata.X
     elif use_rep in adata.obsm.keys():
@@ -146,4 +144,4 @@ def undersample(adata: AnnData, key: str, method: str, **kwargs) -> Union[AnnDat
 
 
 # TODO: Add a function which calls the imblearn combination library
-#y
+# y
