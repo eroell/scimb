@@ -11,6 +11,9 @@ Trial of template maybe extended to balance datasets.
 
 ## Getting started
 
+This is an initial draft for some balancing functionality for the scverse ecosystem.
+Not yet functional.
+
 Please refer to the [documentation][link-docs]. In particular, the
 
 -   [API documentation][link-api].
