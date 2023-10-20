@@ -58,7 +58,14 @@ def oversampling(
     -------
         Union[AnnData, None]: _description_
     """
-    # TODO: most modern random state fix
+    # TODO: check input object
+
+    # ensure that random state is set to 0 if not set by user
+    if kwargs is None:
+        kwargs = {"random_state": 0}
+    elif "random_state" not in kwargs.keys():
+        kwargs["random_state"] = 0
+
     if method == "RandomOverSampler":
         sampler = RandomOverSampler(**kwargs)
     elif method == "SMOTE":
