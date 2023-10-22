@@ -60,6 +60,11 @@ def oversampling(
     """
     # TODO: check input object
 
+    data_is_adata = isinstance(adata, AnnData)
+
+    if not data_is_adata:
+        raise ValueError(f"Input data is not an AnnData object: type of {adata}, is {type(adata)}")
+
     # ensure that random state is set to 0 if not set by user
     if kwargs is None:
         kwargs = {"random_state": 0}
