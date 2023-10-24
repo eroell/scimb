@@ -115,6 +115,7 @@ def oversampling(
     adata_sub = adata[sampler.sample_indices_, :].copy()
 
     # store sampling information in adata.obs
+    # TODO: not every sampler has a sample_indices_ attribute
     adata_sub.obs["orig_pos"] = sampler.sample_indices_
     adata_sub.obs["orig_index"] = adata.obs.index[sampler.sample_indices_]
 
