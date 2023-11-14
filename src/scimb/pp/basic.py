@@ -12,23 +12,6 @@ from imblearn.over_sampling import (
     RandomOverSampler,
 )
 
-
-def basic_preproc(adata: AnnData) -> int:
-    """Run a basic preprocessing on the AnnData object.
-
-    Parameters
-    ----------
-    adata
-        The AnnData object to preprocess.
-
-    Returns
-    -------
-    Some integer value.
-    """
-    print("Implement a preprocessing function here.")
-    return 0
-
-
 # TODO: Add an oversampling function which calls the imblearn oversampling library
 # and can do oversampling, taking as arguments
 # - an AnnData object
@@ -38,7 +21,7 @@ def basic_preproc(adata: AnnData) -> int:
 # It should return a new AnnData object.
 
 
-def oversampling(
+def oversample(
     adata: AnnData, key: str, method: str = "RandomOverSampler", use_rep: str = None, **kwargs
 ) -> Union[AnnData, None]:
     """_summary_
