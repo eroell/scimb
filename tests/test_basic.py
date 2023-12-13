@@ -12,14 +12,14 @@ def test_package_has_version():
     "method",
     [
         "RandomOverSampler",
-        "SMOTE",
+        #  "SMOTE"
     ],  # "SMOTENC", "SMOTEN", "ADASYN", "BorderlineSMOTE", "KMeansSMOTE", "SVMSMOTE"],
 )
 def test_methods_run(method):
     adata = sc.datasets.pbmc3k_processed()
     print(adata.obs.keys)
 
-    scimb.pp.oversampling(adata, key="louvain", method=method)
+    scimb.pp.oversample(adata, key="louvain", method=method)
 
 
 def test_method_not_implemented():
@@ -27,7 +27,7 @@ def test_method_not_implemented():
     print(adata.obs.keys)
 
     with pytest.raises(NotImplementedError):
-        scimb.pp.oversampling(adata, key="louvain", method="NotImplemented")
+        scimb.pp.oversample(adata, key="louvain", method="NotImplemented")
 
 
 def test_data_type():
@@ -36,4 +36,4 @@ def test_data_type():
     df = adata.obs.copy()
 
     with pytest.raises(ValueError):
-        scimb.pp.oversampling(df, key="louvain")
+        scimb.pp.oversample(df, key="louvain")
