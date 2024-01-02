@@ -26,7 +26,7 @@ def test_method_not_implemented():
     adata = sc.datasets.pbmc3k_processed()
     print(adata.obs.keys)
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(ValueError):
         scimb.pp.oversample(adata, key="louvain", method="NotImplemented")
 
 

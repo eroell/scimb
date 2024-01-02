@@ -95,6 +95,8 @@ def oversample(
 
     # sample the adata
     # adata_sub = adata[idx, :].copy()
+    if "sample_indices_" not in sampler.__dict__.keys():
+        raise NotImplementedError(f"Not implemented sampler: {sampler} - is of kind that generates synthetic data.")
     adata_sub = adata[sampler.sample_indices_, :].copy()
 
     # store sampling information in adata.obs
