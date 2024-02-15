@@ -1,5 +1,6 @@
 from typing import Union
 
+import pandas as pd
 from anndata import AnnData
 from imblearn.over_sampling import (
     ADASYN,
@@ -88,7 +89,7 @@ def oversample(
     # TODO: only interested in index, that is sampler.sample_indices_
     # is then fit_resample really the way to go?
     # _, y = sampler.fit_resample(use_data, use_label)
-    sampler.fit_resample(use_data, use_label)
+    X, y = sampler.fit_resample(use_data, use_label)
 
     # get the index of the new data
     # idx = y.index # not useful it just gets a range index
@@ -96,13 +97,14 @@ def oversample(
     # sample the adata
     # adata_sub = adata[idx, :].copy()
     if "sample_indices_" not in sampler.__dict__.keys():
-        raise NotImplementedError(f"Not implemented sampler: {sampler} - is of kind that generates synthetic data.")
-    adata_sub = adata[sampler.sample_indices_, :].copy()
-
-    # store sampling information in adata.obs
-    # TODO: not every sampler has a sample_indices_ attribute
-    adata_sub.obs["orig_pos"] = sampler.sample_indices_
-    adata_sub.obs["orig_index"] = adata.obs.index[sampler.sample_indices_]
+        # raise NotImplementedError(f"Not implemented sampler: {sampler} - is of kind that generates synthetic data.")
+        adata_sub = AnnData(X, obs=pd.DataFrame({key: y}), var=adata.var, uns=adata.uns)
+    else:
+        adata_sub = adata[sampler.sample_indices_, :].copy()
+        # store sampling information in adata.obs
+        # TODO: not every sampler has a sample_indices_ attribute
+        adata_sub.obs["orig_pos"] = sampler.sample_indices_
+        adata_sub.obs["orig_index"] = adata.obs.index[sampler.sample_indices_]
 
     # TODO: think if we want to keep the original data. Representations might become misleading
     # First thought: keep .obs, .var, .uns (e.g. to keep the log1p base info) (but not rank genes etc?)
