@@ -12,8 +12,9 @@ def test_package_has_version():
     "method",
     [
         "RandomOverSampler",
-        #  "SMOTE", "SMOTENC", "SMOTEN", "ADASYN", "BorderlineSMOTE", "KMeansSMOTE", "SVMSMOTE"],
+        "SMOTE",
     ],
+    # "SMOTENC",m"SMOTEN", "ADASYN", "BorderlineSMOTE", "KMeansSMOTE", "SVMSMOTE"],
 )
 def test_methods_run(method):
     adata = sc.datasets.pbmc3k_processed()
